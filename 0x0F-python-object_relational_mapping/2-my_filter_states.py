@@ -1,27 +1,35 @@
 #!/usr/bin/python3
-import MySQLdb
+
+"""
+    A script that lists all states from the database hbtn_0e_0_usa
+    starting with capital letter N
+    Username, password and database names are given as user args
+"""
+
+
 import sys
+import MySQLdb
 
-if __name__ == "__main__":
-    # Connect to MySQL server
-    db = MySQLdb.connect(host="localhost", port=3306,
-                         user=sys.argv[1], passwd=sys.argv[2], db=sys.argv[3])
 
-    # Create cursor object
-    cur = db.cursor()
+if __name__ == '__main__':
+    db = MySQLdb.connect(user=sys.argv[1],
+                         passwd=sys.argv[2],
+                         db=sys.argv[3],
+                         host='localhost',
+                         port=3306)
 
-    # Get the state name from command line argument
-    state_name = sys.argv[4]
+    cursor = db.cursor()
 
-    # Execute SQL query with user input
-    query = "SELECT * FROM states WHERE name = %s ORDER BY id ASC"
-    cur.execute(query, (state_name,))
+    sql = """ SELECT * FROM states
+          WHERE name LIKE BINARY '{}'
+          ORDER BY id ASC """.format(sys.argv[4])
 
-    # Fetch all rows and display results
-    for row in cur.fetchall():
+    cursor.execute(sql)
+
+    data = cursor.fetchall()
+
+    for row in data:
         print(row)
 
-    # Close cursor and connection
-    cur.close()
+    cursor.close()
     db.close()
-
