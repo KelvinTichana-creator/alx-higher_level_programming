@@ -1,14 +1,3 @@
 #!/bin/bash
-
-# Check if URL is provided
-if [ $# -ne 1 ]; then
-    echo "Usage: $0 <URL>"
-    exit 1
-fi
-
-# Send request and measure body size
-BODY_SIZE=$(curl -sI $1 | grep -i Content-Length | awk '{print $2}')
-
-# Display size in bytes
-echo $BODY_SIZE
-
+# script that takes in a URL, sends a request to that URL, and displays size of the body of the response.
+curl -sI "$1" | grep -i Content-Length | cut -d " " -f 2
